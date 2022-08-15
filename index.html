@@ -111,7 +111,7 @@
         box-shadow: 0 0 30px rgb(0 0 0 / 10%);
         /* 翻轉背面隱藏 */
         backface-visibility: hidden;
-        transition: all 0.3s ease-in-out, box-shadow 0.1s ease-in-out;
+        transition: all 0.3s ease-in-out;
       }
       .box_front{
         transform: rotateY(0deg);
@@ -422,22 +422,6 @@
           // console.log('txt:'+txt);
         }, false);
       }
-      //清空創建列表,亂數選店家
-      function creatDate(){
-        //清空創建列表
-        select.innerHTML='';
-        datas.forEach(item=>{
-          select.insertAdjacentHTML('beforeend','<li>'+item+'</li>');
-        })
-        //亂數選店家
-        let random = function(array){
-          let max = array.length - 1;
-          let min = 0;
-          return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
-        let shops = datas[random(datas)];
-        return shops;
-      }
       //get res,動畫速度
       function getData(){
         //get res
@@ -486,11 +470,21 @@
         //禁止按鈕再被點擊
         this.classList.add('load');
 
-        //清空創建列表亂數
-        let txt = creatDate();
-
         //select stare animation
         select.classList.add('active');
+
+        //清空創建列表
+        select.innerHTML='';
+        datas.forEach(item=>{
+          select.insertAdjacentHTML('beforeend','<li>'+item+'</li>');
+        })
+        //亂數選店家
+        let random = function(array){
+          let max = array.length - 1;
+          let min = 0;
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+        let txt = datas[random(datas)];
 
         //1s移除動畫 
         setTimeout(() => {
@@ -511,6 +505,7 @@
         select.insertAdjacentHTML('beforeend','<li>'+text+'</li>');
         //更新地圖
         mapFn(text)
+        //
         alert('更新成功');
       }
       function saveFn(){
@@ -545,7 +540,5 @@
       }
       getData();
     </script>
-    <!-- https://sstudentr900.github.io/home2/page_google/example_eat.html 
-    <p>要解說的: embed,app_script,app_script_debug,選轉</p> -->
   </body>
 </html>
