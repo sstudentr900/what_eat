@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="0"
+      height="0"
+      display="none"
+    >
+      <symbol
+        id="iconArrowEnter"
+        viewBox="0 0 24 24"
+        stroke-width="1.7"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line
+          x1="-5"
+          y1="12"
+          x2="19"
+          y2="12"
+        ></line>
+        <line
+          x1="15"
+          y1="16"
+          x2="19"
+          y2="12"
+        ></line>
+        <line
+          x1="15"
+          y1="8"
+          x2="19"
+          y2="12"
+        ></line>
+      </symbol>
+      <symbol id="iconUpdate" viewBox="0 0 488.932 488.932" fill="currentColor">
+        <path d="M243.158 61.361v-57.6c0-3.2 4-4.9 6.7-2.9l118.4 87c2 1.5 2 4.4 0 5.9l-118.4 87c-2.7 2-6.7.2-6.7-2.9v-57.5c-87.8 1.4-158.1 76-152.1 165.4 5.1 76.8 67.7 139.1 144.5 144 81.4 5.2 150.6-53 163-129.9 2.3-14.3 14.7-24.7 29.2-24.7 17.9 0 31.8 15.9 29 33.5-17.4 109.7-118.5 192-235.7 178.9-98-11-176.7-89.4-187.8-187.4-14.7-128.2 84.9-237.4 209.9-238.8z"></path>
+      </symbol>
+    </svg>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+      *{
+        box-sizing: border-box;
+      }
+      html,body{
+        padding: 0;
+        margin: 0;
+      }
+      body{
+        font-family: 'Noto Sans TC', sans-serif;
+      }
+      ul{
+        list-style: none;
+        padding: 0;
+      }
+
+      .baText{
+        font-size: 220px;
+        margin: 0;
+        position: absolute;
+        text-transform: uppercase;
+        color: rgba(255,255,255,.12);
+        top: -40px;
+        left: -30px;
+        margin-right: -20px;
+        line-height: 0.8;
+        text-align: justify;
+        letter-spacing: -8px;
+        word-break: break-all;
+      }
+      #sample{
+        position: absolute;
+        display: none;
+      }
+      /*pageBg*/
+      .pageBg{
+        user-select: none;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        flex-wrap: wrap;
+        padding: 10px 10px 60px;
+        margin: 0 auto;
+        background: linear-gradient(45deg, rgba(66, 183, 245, 0.8) 0%, rgba(66, 245, 189, 0.4) 100%);
+        overflow: hidden;
+      }
+
+      /*box*/
+      .box{
+        width: 520px;
+        height: 710px;
+        margin: auto;
+        position: relative;
+        /* 翻轉時的深度,值越大效果越小 */
+        perspective: 4000px;
+      }
+      .box>div{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgb(0 0 0 / 10%);
+        /* 翻轉背面隱藏 */
+        backface-visibility: hidden;
+        transition: all 0.3s ease-in-out, box-shadow 0.1s ease-in-out;
+      }
+      .box_front{
+        transform: rotateY(0deg);
+      }
+      #sample:checked+.pageBg .box_front{
+        transform: rotateY(180deg);
+      }
+      .box_back{
+        transform: rotateY(-180deg);
+      }
+      #sample:checked+.pageBg .box_back{
+        transform: rotateY(0deg);
+      }
+
+      /*title*/
+      .title{
+        font-family: 'Noto Sans TC', sans-serif;
+        color: #4285F4;
+        font-size: 58px;
+        font-weight: 700;
+        padding: 0;
+        margin: 0 0 20px;
+        letter-spacing: 1px;
+        text-align: center;
+        line-height: 1;
+      }
+
+      /*select*/
+      .selectDiv{
+        font-size: 15px;
+        font-weight: 500;
+        padding: 10px 20px;
+        color: #666;
+        margin: 10px 0 10px;
+        background: rgba(0, 0, 0, 0.04);
+        text-align: center;
+        border-radius: 4px;
+      }
+      .select{
+        overflow: hidden;
+        height: 22px;
+      }
+      .select ul{
+        margin: 0;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+      .select ul.active{
+        /* animation-duration: 2s; */
+        animation-name: spin;
+      }
+      .select li{
+        height: 22px;
+        line-height: 22px;
+      }
+      @keyframes spin{
+        from {
+          transform: translateY(calc(-100% + 22px));
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      /*button*/
+      button{
+        width: 100%;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #fff;
+        margin-top: 15px;
+        cursor: pointer;
+        background: #4285F4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* box-shadow: 3px 10px 20px 0px rgb(35 100 210 / 30%); */
+      }
+      button+button{
+        margin-top: 10px;
+      }
+      button p{
+        margin: 0;
+      }
+      button svg{
+        display: none;
+        margin: auto;
+        width: 24px;
+        height: 24px;
+        transform-origin: 12px 13.5px;
+        animation: rotation .42s infinite linear;
+      }
+      @keyframes rotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(359deg);
+        }
+      }
+      .load{
+        pointer-events: none;
+        opacity: .5;
+      }
+      button.load svg{
+        display: block;
+      }
+      button.load p{
+        display: none;
+      }
+      button.button_send{
+        animation: pulse 1s infinite;
+        transition: all 1s cubic-bezier(0.8, -0.01, 0.21, 1);
+      }
+      button.load.button_send{
+        animation: none;
+        transition: none;
+      }
+      @keyframes pulse {
+        from {
+          box-shadow: 0 0 0 0px rgb(66 133 244);
+        }
+        to {
+          box-shadow: 0 0 0 10px rgb(66 133 244 / 0%);
+        }
+      }
+      
+      /*map*/
+      .map{
+        overflow: hidden;
+        position: relative;
+        z-index: 2;
+        border: 1px solid #eee;
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+      }
+      .map iframe{
+        /* width: 80%; */
+        width: 100%;
+        transition: all 0.5s ease;
+      }
+      .map .hidden {
+        visibility: hidden;
+        opacity: 0;
+      }
+
+      /*input_Enter*/
+      .input textarea{
+        width: 100%;
+        padding: 12px;
+        border-color: #ddd;
+        height: 430px;
+        font-size: 18px;
+        color: #666;
+      }
+      .input textarea:focus{
+        outline: none;
+      }
+      .input span{
+        color: #aaa;
+        font-size: 13px;
+        font-weight: 300;
+        display: block;
+        letter-spacing: 1px;
+      }
+
+      /*links*/
+      .links{
+        position: absolute;
+        bottom: -35px;
+        color:#fff;
+        right: 0;
+      }
+      .links label{
+        cursor: pointer;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        text-shadow: 0 0 3px rgb(0 0 0 / 20%);
+      }
+      .links label svg{
+        width: 20px;
+        height: 20px;
+        margin-left: 10px;
+      }
+
+      @media screen and (max-width: 500px){
+        /* .pageBg{
+          padding: 10px 10px 60px;
+        } */
+        .box{
+          height: 670px;
+        }
+        .title{
+          font-size: 38px;
+        }
+        
+        .box>div {
+          padding: 20px;
+        }
+        button {
+          margin-top: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <input type="checkbox" id="sample">
+    <div class="pageBg">
+      <h1 class="baText">where to go now where to go now where to go now where to go now where to go now where to go now where to go now where to go now</h1>
+      <div class="box">
+        <div class="box_front">
+          <h2 class="title">現在要去哪??</h2>
+          <!--  select  -->
+          <div class="selectDiv">
+            <div class="select">
+              <ul></ul>
+            </div>
+          </div>
+          <section class="map">
+            <iframe
+              width="600"
+              height="450"
+              style="border:0"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </section>
+          <button class="button_send load">
+            <p>
+              選我，我知道!!
+            </p>
+            <svg>
+              <use xlink:href="#iconUpdate"></use>
+            </svg>
+          </button>
+          <div class="links load">
+            <label for="sample">
+              樣本數更新
+              <svg>
+                <use xlink:href="#iconArrowEnter"></use>
+              </svg>
+            </label>
+          </div>
+        </div>
+        <div class="box_back">
+          <h4 class="title">當前樣本數</h4>
+          <div class="input">
+            <textarea cols="30" rows="10"></textarea>
+            <span>樣本數之間需要用逗號做區隔</span>
+          </div>
+          <button class="button_update">
+            <p>
+              更新樣本數
+            </p>
+            <svg>
+              <use xlink:href="#iconUpdate"></use>
+            </svg>
+          </button>
+          <button class="button_save">
+            <p>
+              儲存到雲端
+            </p>
+            <svg>
+              <use xlink:href="#iconUpdate"></use>
+            </svg>
+          </button>
+          <div class="links">
+            <label for="sample">
+              現在要去哪
+              <svg>
+                <use xlink:href="#iconArrowEnter"></use>
+              </svg>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+      //url來源 - google appscript
+      let url = 'https://script.google.com/macros/s/AKfycbz7jOcWztdK2DhvzSg0MNCVXHwVniSh59pfGsCYZwbManytp31v_9WFzlsnbTSmXD9ElA/exec';
+      const select = document.querySelector('.select>ul');
+      const button_send = document.querySelector('.button_send');
+      const button_update = document.querySelector('.button_update');
+      const button_save = document.querySelector('.button_save');
+      const textarea = document.querySelector('.input textarea');
+      const links = document.querySelector('.links');
+      const map = document.querySelector('.map iframe');
+      let datas = [];
+      //map update
+      function mapFn(txt,buttonTarget){
+        map.src = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBjQzpKIdXs5vEoOCh2vLj-8sF4XdXjnfI&q=' + txt;
+        // 地圖消失
+        // map.classList.add('hidden'); 
+        map.addEventListener('load', () => {
+          // 地圖顯示
+          // map.classList.remove('hidden');
+          if(buttonTarget)buttonTarget.classList.remove('load');
+          //select stop animation
+          select.classList.remove('active');
+          //select result
+          select.querySelector('li').innerHTML = txt;
+          // console.log('txt:'+txt);
+        }, false);
+      }
+      //清空創建列表,亂數選店家
+      function creatDate(){
+        //清空創建列表
+        select.innerHTML='';
+        datas.forEach(item=>{
+          select.insertAdjacentHTML('beforeend','<li>'+item+'</li>');
+        })
+        //亂數選店家
+        let random = function(array){
+          let max = array.length - 1;
+          let min = 0;
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+        let shops = datas[random(datas)];
+        return shops;
+      }
+      //get res,動畫速度
+      function getData(){
+        //get res
+        $.ajax({
+          type: "get",
+          url: url,
+          data: {
+            action: 'queryData'
+          },
+          dataType: "JSON",
+          success: function (res) {
+            //樣本數
+            textarea.innerText = res.join(',');
+
+            //複製第一個給最後一個
+            res.push(res.slice()[0]);
+            datas = res;
+
+            //動畫速度
+            const max = res.length - 1;
+            const second = (0.06*max).toFixed(1);
+            select.style.animationDuration = second+"s";
+            // console.log(datas)
+
+            //第一個名稱
+            let text = res[0];
+            // console.log('第一個名稱'+text);
+            select.insertAdjacentHTML('beforeend','<li>'+text+'</li>');
+
+            //links remove load
+            links.classList.remove('load');
+
+            //更新地圖
+            mapFn(text,button_send)
+
+            //button
+            button_send.addEventListener('click',sendFn);
+            button_update.addEventListener('click',updateFn);
+            button_save.addEventListener('click',saveFn);
+          }
+        });
+      }
+      function sendFn(){
+        // console.log('sendFn')
+
+        //禁止按鈕再被點擊
+        this.classList.add('load');
+
+        //清空創建列表亂數
+        let txt = creatDate();
+
+        //select stare animation
+        select.classList.add('active');
+
+        //1s移除動畫 
+        setTimeout(() => {
+          // 改變地圖位置
+          mapFn(txt,this);
+        }, 400);
+      }
+      function updateFn(){
+        // console.log('updateFn')
+        //取得樣本數
+        let array = textarea.value;
+        //更新data
+        array = array.split(',')
+        array.push(array.slice()[0]);
+        datas = array;
+        //更新li第一個名稱
+        let text = array[0];
+        select.insertAdjacentHTML('beforeend','<li>'+text+'</li>');
+        //更新地圖
+        mapFn(text)
+        alert('更新成功');
+      }
+      function saveFn(){
+        // console.log('saveFn')
+
+        //禁止按鈕再被點擊
+        this.classList.add('load');
+
+        //取得樣本數
+        let array = textarea.value;
+        // console.log(array);
+
+        // 送出到app script
+        let custom_data = {
+          array: array,
+          action: 'updateData'
+        };
+        $.ajax({
+          type: "get",
+          url: url,
+          data: custom_data,
+          dataType: "JSON",
+          success: (res)=>{
+            // console.log(res[0]);
+            if(res[0]){
+              alert('更新成功');
+              this.classList.remove('load');
+              getData();
+            }
+          }
+        });
+      }
+      getData();
+    </script>
+    <!-- https://sstudentr900.github.io/home2/page_google/example_eat.html 
+    <p>要解說的: embed,app_script,app_script_debug,選轉</p> -->
+  </body>
+</html>
