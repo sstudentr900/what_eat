@@ -122,5 +122,5 @@
   }
 ```    
 ## 連結
-[該網頁連結](https://sstudentr900.github.io/what_eat/).
+[該網頁連結](https://sstudentr900.github.io/what_eat/){:target="_blank"}
 
